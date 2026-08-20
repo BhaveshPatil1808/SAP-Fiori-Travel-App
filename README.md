@@ -18,6 +18,8 @@ It combines the **power of ABAP RAP (RESTful Application Programming Model)** wi
 
 ## 🧩 Architecture
 <img width="474" height="262" alt="image" src="https://github.com/user-attachments/assets/f08bd094-d1f7-45ab-94f1-6c3ea629e5c6" />
+
+
 <img width="3494" height="2086" alt="image" src="https://github.com/user-attachments/assets/49de5c42-6ace-4794-a4d4-2fc4c9f4fe71" />
 
 
