@@ -1,0 +1,240 @@
+@Metadata.layer: #CORE
+
+annotate entity Z_PV_BOOSPUL_M_BH with
+{
+    /* ========================================================
+       SUPPLEMENT OBJECT PAGE FACETS
+       ======================================================== */
+
+    @UI.facet: [
+
+        {
+            id: 'SupplementInformation',
+            purpose: #STANDARD,
+            position: 10,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Supplement Information',
+            targetQualifier: 'SupplementInformation'
+        },
+
+        {
+            id: 'SupplementPrice',
+            purpose: #STANDARD,
+            position: 20,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Price Information',
+            targetQualifier: 'SupplementPrice'
+        }
+
+    ]
+
+
+    /* ========================================================
+       TRAVEL ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementInformation',
+            position: 10
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 10
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 10
+        }
+    ]
+
+    TravelId;
+
+
+    /* ========================================================
+       BOOKING ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementInformation',
+            position: 20
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 20
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 20
+        }
+    ]
+
+    BookingId;
+
+
+    /* ========================================================
+       BOOKING SUPPLEMENT ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementInformation',
+            position: 30
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 30
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 30
+        }
+    ]
+
+    BookingSupplementId;
+
+
+    /* ========================================================
+       SUPPLEMENT ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementInformation',
+            position: 40
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 40
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 40
+        }
+    ]
+
+    @UI.selectionField: [
+        {
+            position: 20
+        }
+    ]
+
+    SupplementId;
+
+
+    /* ========================================================
+       PRICE
+       ======================================================== */
+
+    @UI.dataPoint: {
+        qualifier: 'Price',
+        title: 'Price'
+    }
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementPrice',
+            position: 10
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 50
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 50
+        }
+    ]
+
+    Price;
+
+
+    /* ========================================================
+       CURRENCY
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementPrice',
+            position: 20
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 60
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 60
+        }
+    ]
+
+    CurrencyCode;
+
+
+    /* ========================================================
+       LAST CHANGED AT
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'SupplementPrice',
+            position: 30
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 70
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 70
+        }
+    ]
+
+    LastChangedAt;
+
+
+    /* ========================================================
+       ASSOCIATIONS
+       ======================================================== */
+
+    @UI.hidden: true
+    _Booking;
+
+    @UI.hidden: true
+    _Product;
+
+    @UI.hidden: true
+    _SupplementText;
+
+    @UI.hidden: true
+    _Travel;
+}

@@ -1,0 +1,705 @@
+@Metadata.layer: #CORE
+
+@UI.headerInfo: {
+    typeName: 'Travel',
+    typeNamePlural: 'Travels',
+    typeImageUrl: 'sap-icon://travel-itinerary',
+
+    title: {
+        type: #STANDARD,
+        value: 'TravelId'
+    },
+
+    description: {
+        type: #STANDARD,
+        value: 'Description'
+    }
+}
+
+@UI.selectionVariant: [
+    {
+        qualifier: 'All',
+        text: 'All'
+    },
+    {
+        qualifier: 'Open',
+        text: 'Open',
+        filter: 'OverallStatus EQ "O"'
+    },
+    {
+        qualifier: 'Accepted',
+        text: 'Accepted',
+        filter: 'OverallStatus EQ "A"'
+    }
+]
+
+@UI.chart: [
+    {
+        qualifier: 'Accepted',
+        chartType: #COLUMN,
+
+        dimensions: [
+            'AgencyId'
+        ],
+
+        measures: [
+            'TotalPrice'
+        ],
+
+        dimensionAttributes: [
+            {
+                dimension: 'AgencyId',
+                role: #CATEGORY
+            }
+        ],
+
+        measureAttributes: [
+            {
+                measure: 'TotalPrice',
+                role: #AXIS_1
+            }
+        ]
+    }
+]
+
+@UI.presentationVariant: [
+    {
+        qualifier: 'PV_ALL',
+        text: 'All',
+        maxItems: 200,
+
+        sortOrder: [
+            {
+                by: 'TravelId',
+                direction: #DESC
+            }
+        ],
+
+        requestAtLeast: [
+            'TravelId'
+        ],
+
+        visualizations: [
+            {
+                type: #AS_LINEITEM
+            }
+        ]
+    },
+
+    {
+        qualifier: 'PV_ACCEPTED',
+        text: 'Accepted',
+        maxItems: 200,
+
+        visualizations: [
+            {
+                type: #AS_CHART,
+                qualifier: 'Accepted'
+            }
+        ]
+    }
+]
+
+@UI.selectionPresentationVariant: [
+    {
+        qualifier: 'BP_ALL',
+        text: 'All',
+        selectionVariantQualifier: 'All',
+        presentationVariantQualifier: 'PV_ALL'
+    },
+
+    {
+        qualifier: 'BP_OPEN',
+        text: 'Open',
+        selectionVariantQualifier: 'Open',
+        presentationVariantQualifier: 'PV_ALL'
+    },
+
+    {
+        qualifier: 'BP_ACCEPTED',
+        text: 'Accepted',
+        selectionVariantQualifier: 'Accepted',
+        presentationVariantQualifier: 'PV_ACCEPTED'
+    }
+]
+@UI.lineItem: [{criticality: 'OverallStatusCritically'}]
+annotate entity Z_PV_TRAVEL_M with
+{
+
+  /* =========================================================
+     TRAVEL FACETS
+     ========================================================= */
+
+  @UI.facet: [
+
+      /* HEADER */
+
+      {
+          id: 'TravelTotalPrice',
+          purpose: #HEADER,
+          position: 10,
+          type: #DATAPOINT_REFERENCE,
+          targetQualifier: 'TotalPrice'
+      },
+
+      {
+          id: 'TravelOverallStatus',
+          purpose: #HEADER,
+          position: 20,
+          type: #DATAPOINT_REFERENCE,
+          targetQualifier: 'OverallStatus'
+      },
+
+      /* TRAVEL INFORMATION */
+
+      {
+          id: 'TravelInformation',
+          purpose: #STANDARD,
+          position: 10,
+          type: #FIELDGROUP_REFERENCE,
+          label: 'Travel Information',
+          targetQualifier: 'TravelInformation'
+      },
+
+      /* DATES */
+
+      {
+          id: 'TravelDates',
+          purpose: #STANDARD,
+          position: 20,
+          type: #FIELDGROUP_REFERENCE,
+          label: 'Travel Dates',
+          targetQualifier: 'TravelDates'
+      },
+
+      /* PRICE */
+
+      {
+          id: 'PriceInformation',
+          purpose: #STANDARD,
+          position: 30,
+          type: #FIELDGROUP_REFERENCE,
+          label: 'Price Information',
+          targetQualifier: 'PriceInformation'
+      },
+
+      /* ADMIN */
+
+      {
+          id: 'AdministrativeInformation',
+          purpose: #STANDARD,
+          position: 40,
+          type: #FIELDGROUP_REFERENCE,
+          label: 'Administrative Information',
+          targetQualifier: 'AdministrativeInformation'
+      },
+
+      /* =====================================================
+         IMPORTANT: BOOKINGS
+         ===================================================== */
+
+      {
+  id: 'Bookings',
+  purpose: #STANDARD,
+  position: 50,
+  type: #LINEITEM_REFERENCE,
+  label: 'Bookings',
+  targetElement: '_Booking'
+  }
+  ]
+
+
+  /* =========================================================
+     TRAVEL ID
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'TravelId',
+      title: 'Travel ID'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelInformation',
+          position: 10
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 10
+      },
+      {
+          position: 10,
+          qualifier: 'Accepted'
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 10
+      }
+  ]
+
+  @UI.selectionField: [
+      {
+          position: 5
+      }
+  ]
+
+  TravelId;
+
+
+  /* =========================================================
+     AGENCY
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'AgencyId',
+      title: 'Travel Agency'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelInformation',
+          position: 20
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 20
+      },
+      {
+          position: 20,
+          qualifier: 'Accepted'
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 20
+      }
+  ]
+
+  @UI.selectionField: [
+      {
+          position: 10
+      }
+  ]
+
+  @Consumption.valueHelpDefinition: [{
+  
+      entity: {
+          name: 'ZCDS_TRAVEL_M',
+          element: 'AgencyId'
+      }
+  }]
+
+  AgencyId;
+
+
+  /* =========================================================
+     CUSTOMER
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'CustomerId',
+      title: 'Customer'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelInformation',
+          position: 30
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 30
+      },
+      {
+          position: 30,
+          qualifier: 'Accepted'
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 30
+      }
+  ]
+
+  @UI.selectionField: [
+      {
+          position: 20
+      }
+  ]
+
+  @Consumption.valueHelpDefinition: [{
+      entity: {
+          name: 'ZCDS_TRAVEL_M',
+          element: 'CustomerId'
+      }
+  }]
+
+  CustomerId;
+
+
+  /* =========================================================
+     DESCRIPTION
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'Description',
+      title: 'Description'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelInformation',
+          position: 40
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 90
+      },
+      {
+          position: 40,
+          qualifier: 'Accepted'
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 40
+      }
+  ]
+
+  Description;
+
+
+  /* =========================================================
+     OVERALL STATUS
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'OverallStatus',
+      title: 'Overall Status'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelInformation',
+          position: 50
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 100,
+          criticality: 'OverallStatusCritically'
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 50
+      }
+  ]
+
+  @UI.selectionField: [
+      {
+          position: 40
+      }
+  ]
+
+  OverallStatus;
+
+
+  /* =========================================================
+     BEGIN DATE
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'BeginDate',
+      title: 'Begin Date'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelDates',
+          position: 10
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 40
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 60
+      }
+  ]
+
+  @UI.selectionField: [
+      {
+          position: 30
+      }
+  ]
+
+  BeginDate;
+
+
+  /* =========================================================
+     END DATE
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'EndDate',
+      title: 'End Date'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'TravelDates',
+          position: 20
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 50
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 70
+      }
+  ]
+
+  EndDate;
+
+
+  /* =========================================================
+     BOOKING FEE
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'BookinfFee',
+      title: 'Booking Fee'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'PriceInformation',
+          position: 10
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 60
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 80
+      }
+  ]
+
+  BookinfFee;
+
+
+  /* =========================================================
+     TOTAL PRICE
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'TotalPrice',
+      title: 'Total Price'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'PriceInformation',
+          position: 20
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 70
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 90
+      }
+  ]
+
+  TotalPrice;
+
+
+  /* =========================================================
+     CURRENCY
+     ========================================================= */
+
+  @UI.dataPoint: {
+      qualifier: 'CurrencyCode',
+      title: 'Currency'
+  }
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'PriceInformation',
+          position: 30
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 80
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 100
+      }
+  ]
+
+  CurrencyCode;
+
+
+  /* =========================================================
+     CREATED BY
+     ========================================================= */
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'AdministrativeInformation',
+          position: 10
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 110
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 110
+      }
+  ]
+
+  CreatedBy;
+
+
+  /* =========================================================
+     CREATED AT
+     ========================================================= */
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'AdministrativeInformation',
+          position: 20
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 120
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 120
+      }
+  ]
+
+  CreatedAt;
+
+
+  /* =========================================================
+     LAST CHANGED BY
+     ========================================================= */
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'AdministrativeInformation',
+          position: 30
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 130
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 130
+      }
+  ]
+
+  LastChangedBy;
+
+
+  /* =========================================================
+     LAST CHANGED AT
+     ========================================================= */
+
+  @UI.fieldGroup: [
+      {
+          qualifier: 'AdministrativeInformation',
+          position: 40
+      }
+  ]
+
+  @UI.lineItem: [
+      {
+          position: 140
+      }
+  ]
+
+  @UI.identification: [
+      {
+          position: 140
+      }
+  ]
+
+  LastChangedAt;
+
+
+  /* =========================================================
+     ASSOCIATIONS
+     ========================================================= */
+
+
+  @UI.hidden: true
+  _Agency;
+
+  @UI.hidden: true
+  _Currency;
+
+  @UI.hidden: true
+  _Customer;
+
+  @UI.hidden: true
+  _OverallStatus;
+
+}

@@ -1,0 +1,33 @@
+projection;
+strict ( 2 );
+
+define behavior for Z_PV_TRAVEL_M alias Travel
+{
+  use create;
+  use update;
+  use delete;
+  // use action acceptButton;
+  use association _Booking { create; }
+}
+
+
+define behavior for Z_PV_BOOKING_M_BH alias Booking
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+
+  use association _BookSupplement { create; }
+}
+
+
+define behavior for Z_PV_BOOSPUL_M_BH alias BookingSupplement
+{
+  use update;
+  use delete;
+
+  use association _Travel;
+
+  use association _Booking;
+}

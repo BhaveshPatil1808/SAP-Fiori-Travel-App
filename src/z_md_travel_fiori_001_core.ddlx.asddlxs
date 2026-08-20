@@ -1,0 +1,10 @@
+@Metadata.layer: #CORE
+annotate entity Z_TRAVEL_FIORI_001
+    with 
+{
+    @UI.lineItem: [{ position: 10, label: 'Begin Date' }]
+    BeginDate;
+    @UI.lineItem: [{ position: 10, label: 'Booking Fee' }]
+    BookingFee;
+    
+}

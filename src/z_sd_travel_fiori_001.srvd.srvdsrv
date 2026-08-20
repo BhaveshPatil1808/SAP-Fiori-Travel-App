@@ -1,0 +1,4 @@
+@EndUserText.label: 'SD FOR TRAVEL FOR FIORI'
+define service Z_SD_TRAVEL_FIORI_001 {
+  expose Z_TRAVEL_FIORI_001;
+}

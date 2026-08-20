@@ -1,0 +1,392 @@
+
+
+/* ============================================================
+   BOOKING METADATA
+   ============================================================ */
+
+@Metadata.layer: #CORE
+
+annotate entity Z_PV_BOOKING_M_BH with
+{
+
+    /* ========================================================
+       BOOKING OBJECT PAGE FACETS
+       ======================================================== */
+
+    @UI.facet: [
+
+        {
+            id: 'BookingInformation',
+            purpose: #STANDARD,
+            position: 10,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Booking Information',
+            targetQualifier: 'BookingInformation'
+        },
+
+        {
+            id: 'FlightInformation',
+            purpose: #STANDARD,
+            position: 20,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Flight Information',
+            targetQualifier: 'FlightInformation'
+        },
+
+        {
+            id: 'BookingStatusInformation',
+            purpose: #STANDARD,
+            position: 30,
+            type: #FIELDGROUP_REFERENCE,
+            label: 'Booking Status',
+            targetQualifier: 'BookingStatusInformation'
+        },
+
+        {
+    id: 'BookingSupplements',
+    purpose: #STANDARD,
+    position: 40,
+    type: #LINEITEM_REFERENCE,
+    label: 'Booking Supplements',
+    targetElement: '_BookSupplement'
+}
+    ]
+
+
+    /* ========================================================
+       TRAVEL ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingInformation',
+            position: 10
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 10
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 10
+        }
+    ]
+
+    TravelId;
+
+
+    /* ========================================================
+       BOOKING ID
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingInformation',
+            position: 20
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 20
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 20
+        }
+    ]
+
+    BookingId;
+
+
+    /* ========================================================
+       BOOKING DATE
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingInformation',
+            position: 30
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 30
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 30
+        }
+    ]
+
+    @UI.selectionField: [
+        {
+            position: 10
+        }
+    ]
+
+    BookingDate;
+
+
+    /* ========================================================
+       CUSTOMER
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingInformation',
+            position: 40
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 40
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 40
+        }
+    ]
+
+    @UI.selectionField: [
+        {
+            position: 20
+        }
+    ]
+
+    CustomerId;
+
+
+    /* ========================================================
+       CARRIER
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'FlightInformation',
+            position: 10
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 50
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 50
+        }
+    ]
+
+    @UI.selectionField: [
+        {
+            position: 30
+        }
+    ]
+
+    CarrierId;
+
+
+    /* ========================================================
+       CONNECTION
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'FlightInformation',
+            position: 20
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 60
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 60
+        }
+    ]
+
+    ConnectionId;
+
+
+    /* ========================================================
+       FLIGHT DATE
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'FlightInformation',
+            position: 30
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 70
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 70
+        }
+    ]
+
+    FlightDate;
+
+
+    /* ========================================================
+       FLIGHT PRICE
+       ======================================================== */
+
+    @UI.dataPoint: {
+        qualifier: 'FlightPrice',
+        title: 'Flight Price'
+    }
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'FlightInformation',
+            position: 40
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 80
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 80
+        }
+    ]
+
+    FlightPrice;
+
+
+    /* ========================================================
+       CURRENCY
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'FlightInformation',
+            position: 50
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 90
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 90
+        }
+    ]
+
+    CurrencyCode;
+
+
+    /* ========================================================
+       BOOKING STATUS
+       ======================================================== */
+
+    @UI.dataPoint: {
+        qualifier: 'BookingStatus',
+        title: 'Booking Status'
+    }
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingStatusInformation',
+            position: 10
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 100
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 100
+        }
+    ]
+
+    BookingStatus;
+
+
+    /* ========================================================
+       LAST CHANGED AT
+       ======================================================== */
+
+    @UI.fieldGroup: [
+        {
+            qualifier: 'BookingStatusInformation',
+            position: 20
+        }
+    ]
+
+    @UI.lineItem: [
+        {
+            position: 110
+        }
+    ]
+
+    @UI.identification: [
+        {
+            position: 110
+        }
+    ]
+
+    LastChangedAt;
+
+
+    /* ========================================================
+       ASSOCIATIONS
+       ======================================================== */
+
+    @UI.hidden: true
+    _Travel;
+
+    @UI.hidden: true
+    _Customer;
+
+    @UI.hidden: true
+    _Carrier;
+
+    @UI.hidden: true
+    _Connection;
+
+    @UI.hidden: true
+    _BookingStatus;
+    
+    @UI.hidden: true
+_BookSupplement;
+
+}
