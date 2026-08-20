@@ -1,0 +1,1902 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <title>Travel Management</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* =========================================================
+           DESIGN TOKENS
+
+           Ink        #0B2A4A  - headings / primary text
+           Runway     #0072E5  - primary accent (aligned to SAP Horizon blue)
+           Dusk       #16324F  - secondary dark / table header text
+           Cloud      #F5F9FD  - page background base
+           Gold       #E8A33D  - "boarding" accent, signature color
+           Slate      #6B7C93  - secondary / muted text
+           ========================================================= */
+
+        :root {
+
+            --ink: #0B2A4A;
+            --runway: #0072E5;
+            --runway-deep: #0057B8;
+            --dusk: #16324F;
+            --cloud: #F5F9FD;
+            --gold: #E8A33D;
+            --gold-deep: #C97F1E;
+            --slate: #6B7C93;
+            --hairline: rgba(11, 42, 74, 0.09);
+        }
+
+
+        /* =========================================================
+           PAGE FOUNDATION
+           IMPORTANT:
+           We intentionally do NOT change SAPUI5 table/list layout.
+           Only visual styling is applied to avoid breaking
+           Fiori Elements rendering.
+           ========================================================= */
+
+        html,
+        body,
+        body > div,
+        #container,
+        #container-uiarea {
+
+            height: 100%;
+            width: 100%;
+
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+
+            overflow: hidden;
+        }
+
+
+        body {
+
+            position: relative;
+
+            background:
+                radial-gradient(
+                    circle at 4% 0%,
+                    rgba(0, 114, 229, 0.10),
+                    transparent 28%
+                ),
+                radial-gradient(
+                    circle at 100% 100%,
+                    rgba(232, 163, 61, 0.07),
+                    transparent 30%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8fbff 0%,
+                    #eef4fa 48%,
+                    #f9fbfe 100%
+                );
+
+            font-family:
+                "72",
+                "72full",
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+
+            * {
+
+                animation-duration: 0.001ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.001ms !important;
+            }
+        }
+
+
+        /* Soft background decoration */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            top: -210px;
+            left: -210px;
+
+            width: 500px;
+            height: 500px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0, 114, 229, 0.08) 0%,
+                    rgba(0, 114, 229, 0.025) 45%,
+                    transparent 72%
+                );
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            right: -230px;
+            bottom: -230px;
+
+            width: 530px;
+            height: 530px;
+
+            border-radius: 50%;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(232, 163, 61, 0.07) 0%,
+                    rgba(232, 163, 61, 0.02) 45%,
+                    transparent 72%
+                );
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+
+        #container {
+
+            position: relative;
+
+            height: 100%;
+            width: 100%;
+
+            z-index: 1;
+        }
+
+
+        #container-uiarea {
+
+            height: 100%;
+            width: 100%;
+        }
+
+
+        :focus-visible {
+
+            outline: 2px solid var(--runway);
+
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================================
+           FIORI / SAPUI5 VISUAL ENHANCEMENTS
+
+           These rules intentionally change only appearance:
+           colors, borders, shadows, radii and typography.
+           No table positioning, height, overflow or display rules.
+           ========================================================= */
+
+        .sapFDynamicPage,
+        .sapMPage,
+        .sapMPageBgStandard,
+        .sapMPageBgSolid {
+
+            background: transparent !important;
+        }
+
+
+        /* Filter area / page bars */
+
+        .sapFDynamicPageTitle,
+        .sapFDynamicPageHeader,
+        .sapMBar,
+        .sapMTB {
+
+            background:
+                rgba(255, 255, 255, 0.90) !important;
+
+            border-color:
+                var(--hairline) !important;
+
+            box-shadow:
+                0 4px 18px
+                rgba(11, 42, 74, 0.05);
+        }
+
+
+        /* Page titles */
+
+        .sapMTitle {
+
+            color: var(--ink);
+        }
+
+
+        /* Filter labels */
+
+        .sapUiCompFilterLabel,
+        .sapMLabel {
+
+            color: var(--slate);
+        }
+
+
+        /* Filter inputs */
+
+        .sapMInputBaseContentWrapper {
+
+            background:
+                rgba(255, 255, 255, 0.97) !important;
+
+            border:
+                1px solid #cbd7e4 !important;
+
+            border-radius: 9px !important;
+
+            box-shadow:
+                0 1px 4px
+                rgba(11, 42, 74, 0.04);
+
+            transition:
+                border-color 0.18s ease,
+                box-shadow 0.18s ease;
+        }
+
+
+        .sapMInputBaseContentWrapper:hover {
+
+            border-color:
+                #8eb7e6 !important;
+
+            box-shadow:
+                0 3px 10px
+                rgba(0, 114, 229, 0.08);
+        }
+
+
+        .sapMInputBaseContentWrapper:focus-within {
+
+            border-color:
+                var(--runway) !important;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(0, 114, 229, 0.14);
+        }
+
+
+        /* Go / primary buttons */
+
+        .sapMBtnInner {
+
+            border-radius: 9px;
+
+            transition:
+                transform 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+
+        .sapMBtnEmphasized .sapMBtnInner {
+
+            background: var(--runway) !important;
+
+            border-color: var(--runway-deep) !important;
+
+            box-shadow:
+                0 5px 14px
+                rgba(0, 114, 229, 0.24);
+        }
+
+
+        .sapMBtnEmphasized .sapMBtnInner:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 18px
+                rgba(0, 114, 229, 0.28);
+        }
+
+
+        /* =========================================================
+           TRAVEL TABLE
+           ========================================================= */
+
+        /* Table outer visual surface */
+
+        .sapMListTbl {
+
+            background:
+                rgba(255, 255, 255, 0.95) !important;
+
+            border:
+                1px solid var(--hairline);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(11, 42, 74, 0.075);
+        }
+
+
+        /* Table header */
+
+        .sapMListTblHeaderCell {
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #f8fbff 0%,
+                    #edf4fa 100%
+                ) !important;
+
+            border-bottom:
+                2px solid var(--runway) !important;
+
+            position: relative;
+        }
+
+
+        .sapMListTblHeaderCell .sapMLabel {
+
+            color: var(--dusk);
+
+            font-weight: 700;
+
+            letter-spacing: 0.1px;
+        }
+
+
+        /* Data cells */
+
+        .sapMListTblCell {
+
+            border-bottom:
+                1px solid
+                rgba(11, 42, 74, 0.06);
+
+            transition: background-color 0.15s ease;
+        }
+
+
+        /* Row hover */
+
+        .sapMListTblRow:hover {
+
+            background:
+                rgba(0, 114, 229, 0.035);
+        }
+
+
+        .sapMListTblRow:hover .sapMListTblCell {
+
+            border-bottom-color:
+                rgba(0, 114, 229, 0.12);
+        }
+
+
+        /* Table text */
+
+        .sapMListTblCell .sapMText {
+
+            color: #233d58;
+        }
+
+
+        /* Numeric / price values */
+
+        .sapMListTblCell .sapMObjectNumber {
+
+            color: var(--ink);
+
+            font-weight: 600;
+        }
+
+
+        /* Object status — treat as boarding-pass style stamps */
+
+        .sapMObjStatus {
+
+            border-radius: 18px;
+
+            padding: 1px 10px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.2px;
+        }
+
+
+        .sapMObjStatusSuccess {
+
+            background: rgba(16, 130, 90, 0.10);
+        }
+
+
+        .sapMObjStatusWarning {
+
+            background: rgba(232, 163, 61, 0.14);
+        }
+
+
+        .sapMObjStatusError {
+
+            background: rgba(191, 46, 46, 0.10);
+        }
+
+
+        /* =========================================================
+           GRID TABLE (sap.ui.table.Table)
+
+           The List Report table in the screenshot is a resizable
+           grid table, not the responsive sap.m.Table styled above —
+           it uses an entirely different class family. These rules
+           mirror the same visual language (rounded surface, blue
+           header rule, quiet hover) for that control.
+           ========================================================= */
+
+        .sapUiTable {
+
+            background:
+                rgba(255, 255, 255, 0.95) !important;
+
+            border:
+                1px solid var(--hairline) !important;
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 10px 30px
+                rgba(11, 42, 74, 0.075);
+
+            overflow: hidden;
+        }
+
+
+        .sapUiTableCCnt,
+        .sapUiTableCtrlScr,
+        .sapUiTableCtrlBefore,
+        .sapUiTableCtrlAfter {
+
+            background: transparent !important;
+        }
+
+
+        /* Column header row */
+
+        .sapUiTableColHdrCnt,
+        .sapUiTableColHdr {
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #f8fbff 0%,
+                    #edf4fa 100%
+                ) !important;
+
+            border-bottom:
+                2px solid var(--runway) !important;
+        }
+
+
+        .sapUiTableCol .sapUiTableCellInner,
+        .sapUiTableColCell {
+
+            color: var(--dusk);
+
+            font-weight: 700;
+
+            letter-spacing: 0.1px;
+        }
+
+
+        /* Data rows and cells */
+
+        .sapUiTableCtrl td.sapUiTableCell,
+        .sapUiTableCell {
+
+            border-bottom:
+                1px solid rgba(11, 42, 74, 0.06) !important;
+
+            border-right-color:
+                rgba(11, 42, 74, 0.045) !important;
+
+            transition: background-color 0.15s ease;
+        }
+
+
+        .sapUiTableCellInner {
+
+            color: #233d58;
+        }
+
+
+        /* Row hover / selection */
+
+        .sapUiTableRow:hover > td,
+        .sapUiTableRowHvr > td,
+        .sapUiTableRowSelectionCell:hover {
+
+            background:
+                rgba(0, 114, 229, 0.035) !important;
+        }
+
+
+        .sapUiTableRowSel > td {
+
+            background:
+                rgba(0, 114, 229, 0.06) !important;
+        }
+
+
+        /* Row-selector radio column */
+
+        .sapUiTableRowSelectionCell .sapMRb .sapMRbSel .sapMRbB {
+
+            border-color: var(--runway) !important;
+
+            background: var(--runway) !important;
+        }
+
+
+        /* Status highlight bars at the left edge of each row —
+           colors stay semantic (success / warning / error); only
+           softened corners are added so they read as a ribbon
+           rather than a hard block. */
+
+        .sapUiTableRowHighlight,
+        .sapUiTableRowIndicators > div {
+
+            border-radius: 0 3px 3px 0;
+        }
+
+
+        /* Numeric columns */
+
+        .sapUiTableCell .sapMObjectNumber {
+
+            color: var(--ink);
+
+            font-weight: 600;
+        }
+
+
+        /* Column resize handles, sort/filter icons in header */
+
+        .sapUiTableColIcon,
+        .sapUiTableColRSz {
+
+            opacity: 0.55;
+        }
+
+
+        .sapUiTableColHovered .sapUiTableColIcon {
+
+            opacity: 1;
+        }
+
+
+        /* =========================================================
+           ICON TAB BAR (All / Open / Accepted, etc.)
+           ========================================================= */
+
+        .sapMITBHead {
+
+            background: transparent !important;
+
+            border-bottom:
+                1px solid var(--hairline) !important;
+        }
+
+
+        .sapMITBFilter {
+
+            transition:
+                background-color 0.15s ease,
+                border-color 0.15s ease;
+        }
+
+
+        .sapMITBFilter .sapMITBText {
+
+            color: var(--slate);
+
+            font-weight: 600;
+        }
+
+
+        .sapMITBFilter .sapMITBCount {
+
+            color: var(--slate);
+
+            font-weight: 500;
+        }
+
+
+        .sapMITBFilter:hover {
+
+            background:
+                rgba(0, 114, 229, 0.045) !important;
+        }
+
+
+        .sapMITBSelected {
+
+            border-bottom-color: var(--runway) !important;
+        }
+
+
+        .sapMITBSelected .sapMITBText,
+        .sapMITBSelected .sapMITBCount {
+
+            color: var(--runway-deep) !important;
+
+            font-weight: 700;
+        }
+
+
+        .sapMITBContentSep,
+        .sapMITBFilter.sapMITBSelected::after {
+
+            background: var(--runway) !important;
+        }
+
+
+        /* =========================================================
+           FILTER BAR (Adapt Filters row)
+           ========================================================= */
+
+        .sapUiCompFilterBar,
+        .sapUiCompFilterBarPageFilterContainer {
+
+            background: transparent !important;
+        }
+
+
+        .sapUiCompFilterBar .sapMLabel {
+
+            color: var(--slate);
+
+            font-weight: 600;
+
+            font-size: 12.5px;
+        }
+
+
+        .sapUiCompFilterBar .sapMInputBaseContentWrapper {
+
+            background: rgba(255, 255, 255, 0.97) !important;
+
+            border: 1px solid #cbd7e4 !important;
+
+            border-radius: 9px !important;
+        }
+
+
+        .sapUiCompFilterBar .sapMLnk,
+        a.sapUiCompFilterBarLink {
+
+            color: var(--runway-deep);
+
+            font-weight: 600;
+        }
+
+
+        /* Collapse / pin controls beneath the filter bar */
+
+        .sapUiCompFilterBarExpandCollapseButton .sapMBtnInner,
+        .sapMITBFilter .sapMBtnInner {
+
+            border-radius: 8px;
+        }
+
+
+        /* =========================================================
+           TABLE TOOLBAR ICONS (sort, group, settings, export…)
+           ========================================================= */
+
+        .sapMOverflowToolbar .sapMBtnIcon,
+        .sapMTB .sapMBtnIcon {
+
+            color: var(--slate);
+        }
+
+
+        .sapMOverflowToolbar .sapMBtn:hover .sapMBtnIcon,
+        .sapMTB .sapMBtn:hover .sapMBtnIcon {
+
+            color: var(--runway-deep);
+        }
+
+
+        .sapMOverflowToolbar .sapMBtnActive .sapMBtnInner,
+        .sapMTB .sapMBtnActive .sapMBtnInner {
+
+            background: rgba(0, 114, 229, 0.10) !important;
+
+            border-radius: 8px;
+        }
+
+
+        /* Create / My Action / Delete text buttons in the table
+           toolbar */
+
+        .sapMBar .sapMBtnTransparent .sapMBtnInner {
+
+            border-radius: 8px;
+
+            transition: background-color 0.15s ease;
+        }
+
+
+        .sapMBar .sapMBtnTransparent:hover .sapMBtnInner {
+
+            background: rgba(0, 114, 229, 0.06) !important;
+        }
+
+
+        /* Variant management title ("Standard") */
+
+        .sapUiCompVariantManagementLink .sapMTitle,
+        .sapMVariantManagementTitle {
+
+            color: var(--runway) !important;
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           FIORI TABLE TOOLBAR
+           ========================================================= */
+
+        .sapMListTblCnt {
+
+            background:
+                transparent !important;
+        }
+
+
+        .sapMListTblHeader {
+
+            background:
+                rgba(255, 255, 255, 0.92) !important;
+        }
+
+
+        /* Toolbar buttons */
+
+        .sapMOverflowToolbar .sapMBtnInner,
+        .sapMTB .sapMBtnInner {
+
+            border-radius: 9px;
+        }
+
+
+        /* =========================================================
+           LISTS / PANELS
+           ========================================================= */
+
+        .sapMList {
+
+            background:
+                rgba(255, 255, 255, 0.92) !important;
+
+            border-color:
+                var(--hairline);
+        }
+
+
+        .sapMPanel {
+
+            background:
+                rgba(255, 255, 255, 0.92);
+
+            border:
+                1px solid var(--hairline);
+
+            border-radius: 16px;
+
+            box-shadow:
+                0 8px 26px
+                rgba(11, 42, 74, 0.065);
+        }
+
+
+        /* Slim, quiet scrollbars */
+
+        ::-webkit-scrollbar {
+
+            width: 10px;
+            height: 10px;
+        }
+
+
+        ::-webkit-scrollbar-track {
+
+            background: transparent;
+        }
+
+
+        ::-webkit-scrollbar-thumb {
+
+            background: rgba(11, 42, 74, 0.16);
+
+            border-radius: 20px;
+
+            border: 2px solid transparent;
+
+            background-clip: content-box;
+        }
+
+
+        ::-webkit-scrollbar-thumb:hover {
+
+            background: rgba(11, 42, 74, 0.28);
+
+            background-clip: content-box;
+        }
+
+
+        /* =========================================================
+           LOADING SCREEN — "BOARDING PASS"
+
+           Signature element: the loader is shaped like a boarding
+           pass. A dashed route arcs between a departure and an
+           arrival stamp while the aircraft crosses it; a perforated
+           tear-line separates the pass from its stub, where flight
+           information (the real loading status) is reported in a
+           monospaced, airport-display voice.
+           ========================================================= */
+
+        #travelLoader {
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: 999999;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background:
+                radial-gradient(
+                    circle at 18% 15%,
+                    rgba(0, 114, 229, 0.18),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at 85% 85%,
+                    rgba(232, 163, 61, 0.14),
+                    transparent 32%
+                ),
+                linear-gradient(
+                    135deg,
+                    #f8fbff,
+                    #edf4fc
+                );
+
+            opacity: 1;
+
+            visibility: visible;
+
+            transition:
+                opacity 0.60s ease,
+                visibility 0.60s ease;
+        }
+
+
+        #travelLoader.loader-hidden {
+
+            opacity: 0;
+
+            visibility: hidden;
+
+            pointer-events: none;
+        }
+
+
+        .boarding-pass {
+
+            width: min(
+                400px,
+                calc(100vw - 48px)
+            );
+
+            border-radius: 24px;
+
+            background:
+                rgba(255, 255, 255, 0.86);
+
+            border:
+                1px solid rgba(255, 255, 255, 0.95);
+
+            box-shadow:
+                0 32px 85px
+                rgba(11, 42, 74, 0.17),
+
+                0 8px 25px
+                rgba(11, 42, 74, 0.08);
+
+            backdrop-filter: blur(20px);
+
+            -webkit-backdrop-filter: blur(20px);
+
+            animation:
+                loaderAppear
+                0.70s
+                ease-out;
+
+            overflow: hidden;
+
+            font-family:
+                "Space Grotesk",
+                "72",
+                Arial,
+                sans-serif;
+        }
+
+
+        .pass-main {
+
+            padding: 36px 34px 26px;
+
+            text-align: center;
+        }
+
+
+        /* Departure → arrival route with an arcing aircraft */
+
+        .route-track {
+
+            position: relative;
+
+            width: 232px;
+
+            height: 60px;
+
+            margin: 0 auto 20px;
+        }
+
+
+        .route-line {
+
+            position: absolute;
+
+            left: 15px;
+            right: 15px;
+
+            top: 78%;
+
+            border-top: 2px dashed rgba(11, 42, 74, 0.16);
+        }
+
+
+        .route-dot {
+
+            position: absolute;
+
+            top: 78%;
+
+            width: 9px;
+            height: 9px;
+
+            border-radius: 50%;
+
+            transform: translateY(-50%);
+        }
+
+
+        .route-dot.dep {
+
+            left: 9px;
+
+            background: var(--runway);
+
+            box-shadow: 0 0 0 5px rgba(0, 114, 229, 0.15);
+        }
+
+
+        .route-dot.arr {
+
+            right: 9px;
+
+            background: var(--gold);
+
+            box-shadow: 0 0 0 5px rgba(232, 163, 61, 0.18);
+        }
+
+
+        .plane-icon {
+
+            position: absolute;
+
+            font-size: 20px;
+
+            color: var(--runway-deep);
+
+            filter:
+                drop-shadow(0 3px 4px rgba(11, 42, 74, 0.18));
+
+            animation:
+                flyPlane
+                2.8s
+                cubic-bezier(0.45, 0.05, 0.55, 0.95)
+                infinite;
+        }
+
+
+        .loader-title {
+
+            margin: 0;
+
+            color: var(--ink);
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            letter-spacing: -0.3px;
+        }
+
+
+        .loader-subtitle {
+
+            margin: 8px 0 0;
+
+            color: var(--slate);
+
+            font-size: 14px;
+
+            font-family:
+                "72",
+                Arial,
+                sans-serif;
+
+            line-height: 1.5;
+        }
+
+
+        /* Perforated tear-line between pass and stub */
+
+        .pass-perforation {
+
+            position: relative;
+
+            height: 0;
+
+            border-top: 2px dashed rgba(11, 42, 74, 0.18);
+
+            margin: 0 2px;
+        }
+
+
+        .notch {
+
+            position: absolute;
+
+            top: 50%;
+
+            width: 22px;
+            height: 22px;
+
+            border-radius: 50%;
+
+            background: #eef4fb;
+
+            transform: translateY(-50%);
+
+            box-shadow: inset 0 0 0 1px rgba(11, 42, 74, 0.05);
+        }
+
+
+        .notch-left {
+
+            left: -13px;
+        }
+
+
+        .notch-right {
+
+            right: -13px;
+        }
+
+
+        /* Stub: the real loading status, in airport-board voice */
+
+        .pass-stub {
+
+            padding: 22px 34px 28px;
+
+            background: rgba(11, 42, 74, 0.02);
+        }
+
+
+        .stub-row {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            margin-bottom: 14px;
+
+            font-family: "IBM Plex Mono", monospace;
+        }
+
+
+        .stub-label {
+
+            font-size: 11px;
+
+            font-weight: 600;
+
+            letter-spacing: 1.6px;
+
+            color: var(--slate);
+        }
+
+
+        #loadingStatus.stub-value {
+
+            font-size: 11.5px;
+
+            font-weight: 600;
+
+            letter-spacing: 0.8px;
+
+            color: var(--runway-deep);
+
+            text-transform: uppercase;
+
+            text-align: right;
+        }
+
+
+        .progress-track {
+
+            width: 100%;
+
+            height: 5px;
+
+            border-radius: 20px;
+
+            background:
+                rgba(0, 114, 229, 0.10);
+
+            overflow: hidden;
+        }
+
+
+        .progress-bar {
+
+            width: 40%;
+
+            height: 100%;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--runway),
+                    var(--gold),
+                    var(--runway)
+                );
+
+            animation:
+                progressMove
+                1.5s
+                ease-in-out
+                infinite;
+        }
+
+
+        .stub-code {
+
+            margin-top: 14px;
+
+            text-align: center;
+
+            font-family: "IBM Plex Mono", monospace;
+
+            font-size: 10.5px;
+
+            letter-spacing: 4px;
+
+            color: rgba(11, 42, 74, 0.30);
+        }
+
+
+        /* =========================================================
+           LOADER ANIMATIONS
+           ========================================================= */
+
+        @keyframes loaderAppear {
+
+            from {
+
+                opacity: 0;
+
+                transform:
+                    translateY(20px)
+                    scale(0.97);
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform:
+                    translateY(0)
+                    scale(1);
+            }
+        }
+
+
+        @keyframes flyPlane {
+
+            0% {
+
+                left: 4%;
+                top: 66%;
+
+                opacity: 0;
+
+                transform: rotate(-6deg) scale(0.82);
+            }
+
+            12% {
+
+                opacity: 1;
+            }
+
+            50% {
+
+                left: 48%;
+                top: 4%;
+
+                transform: rotate(0deg) scale(1);
+            }
+
+            88% {
+
+                opacity: 1;
+            }
+
+            100% {
+
+                left: 92%;
+                top: 66%;
+
+                opacity: 0;
+
+                transform: rotate(6deg) scale(0.82);
+            }
+        }
+
+
+        @keyframes progressMove {
+
+            0% {
+
+                transform:
+                    translateX(-130%);
+            }
+
+            50% {
+
+                transform:
+                    translateX(115%);
+            }
+
+            100% {
+
+                transform:
+                    translateX(260%);
+            }
+        }
+
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
+        @media (max-width: 600px) {
+
+            .boarding-pass {
+
+                width:
+                    calc(100vw - 44px);
+
+                border-radius: 20px;
+            }
+
+
+            .pass-main {
+
+                padding: 30px 24px 22px;
+            }
+
+
+            .pass-stub {
+
+                padding: 18px 24px 24px;
+            }
+
+
+            .route-track {
+
+                width: 100%;
+
+                max-width: 232px;
+            }
+
+
+            .loader-title {
+
+                font-size: 22px;
+            }
+
+
+            .loader-subtitle {
+
+                font-size: 13px;
+            }
+        }
+
+    </style>
+
+
+    <!-- =========================================================
+         SAPUI5 BOOTSTRAP
+         ORIGINAL CONFIGURATION PRESERVED
+         ========================================================= -->
+
+    <script
+        id="sap-ui-bootstrap"
+        src="resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-resource-roots='{
+            "travel1": "./"
+        }'
+        data-sap-ui-on-init="module:sap/ui/core/ComponentSupport"
+        data-sap-ui-compat-version="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-frame-options="trusted">
+    </script>
+
+</head>
+
+
+<body
+    class="sapUiBody sapUiSizeCompact"
+    id="content">
+
+
+    <!-- =========================================================
+         LOADING SCREEN
+         ========================================================= -->
+
+    <div id="travelLoader">
+
+        <div class="boarding-pass">
+
+            <div class="pass-main">
+
+                <div class="route-track">
+
+                    <span class="route-line"></span>
+                    <span class="route-dot dep"></span>
+                    <span class="route-dot arr"></span>
+                    <span class="plane-icon">✈</span>
+
+                </div>
+
+
+                <h1 class="loader-title">
+                    Travel Management
+                </h1>
+
+
+                <p class="loader-subtitle">
+                    Boarding your travel data and workspace
+                </p>
+
+            </div>
+
+
+            <div class="pass-perforation">
+
+                <span class="notch notch-left"></span>
+                <span class="notch notch-right"></span>
+
+            </div>
+
+
+            <div class="pass-stub">
+
+                <div class="stub-row">
+
+                    <span class="stub-label">STATUS</span>
+
+                    <span
+                        id="loadingStatus"
+                        class="stub-value">
+
+                        CONNECTING&nbsp;TO&nbsp;TRAVEL&nbsp;MANAGEMENT
+
+                    </span>
+
+                </div>
+
+
+                <div class="progress-track">
+
+                    <div class="progress-bar"></div>
+
+                </div>
+
+
+                <div class="stub-code">
+                    TRV · MGMT · SAP FIORI
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         SAPUI5 COMPONENT
+         ORIGINAL CONFIGURATION PRESERVED
+         ========================================================= -->
+
+    <div
+        data-sap-ui-component
+        data-name="travel1"
+        data-id="container"
+        data-settings='{"id" : "travel1"}'
+        data-handle-validation="true">
+    </div>
+
+
+    <!-- =========================================================
+         DATA-AWARE LOADING HANDLER
+         ORIGINAL LOGIC PRESERVED — only the status copy passed to
+         updateStatus() was adapted to the boarding-pass voice.
+         ========================================================= -->
+
+    <script>
+
+        (function () {
+
+            "use strict";
+
+
+            var loader =
+                document.getElementById(
+                    "travelLoader"
+                );
+
+
+            var status =
+                document.getElementById(
+                    "loadingStatus"
+                );
+
+
+            var startTime =
+                Date.now();
+
+
+            var hidden = false;
+
+
+            var minimumDisplayTime =
+                650;
+
+
+            var maximumWaitTime =
+                20000;
+
+
+            function updateStatus(text) {
+
+                if (status) {
+
+                    status.textContent = text;
+                }
+            }
+
+
+            function hideLoader() {
+
+                if (
+                    hidden ||
+                    !loader
+                ) {
+
+                    return;
+                }
+
+
+                hidden = true;
+
+
+                loader.classList.add(
+                    "loader-hidden"
+                );
+
+
+                window.setTimeout(
+                    function () {
+
+                        if (
+                            loader &&
+                            loader.parentNode
+                        ) {
+
+                            loader.parentNode
+                                .removeChild(
+                                    loader
+                                );
+                        }
+
+                    },
+                    650
+                );
+            }
+
+
+            function hasTravelDataRendered() {
+
+                var container =
+                    document.getElementById(
+                        "container"
+                    );
+
+
+                if (!container) {
+
+                    return false;
+                }
+
+
+                /*
+                 * Fiori Elements table:
+                 * data rows normally appear as sapMLIB
+                 * elements inside the table.
+                 */
+
+                var rows =
+                    container.querySelectorAll(
+                        ".sapMListTblRow"
+                    );
+
+
+                if (
+                    rows &&
+                    rows.length > 0
+                ) {
+
+                    return true;
+                }
+
+
+                /*
+                 * Empty-result case.
+                 * If the table explicitly says there
+                 * is no data, the loading phase is also
+                 * complete.
+                 */
+
+                var noData =
+                    container.querySelector(
+                        ".sapMListNoData"
+                    );
+
+
+                if (noData) {
+
+                    return true;
+                }
+
+
+                /*
+                 * Some UI5 table implementations use
+                 * sapMLIB instead of the table-row class.
+                 */
+
+                var items =
+                    container.querySelectorAll(
+                        ".sapMListItems > .sapMLIB"
+                    );
+
+
+                return (
+                    items &&
+                    items.length > 0
+                );
+            }
+
+
+            function applicationExists() {
+
+                var container =
+                    document.getElementById(
+                        "container"
+                    );
+
+
+                if (!container) {
+
+                    return false;
+                }
+
+
+                return !!container.querySelector(
+                    ".sapMPage, " +
+                    ".sapFDynamicPage, " +
+                    ".sapMApp"
+                );
+            }
+
+
+            function checkApplication() {
+
+                if (hidden) {
+
+                    return;
+                }
+
+
+                var elapsed =
+                    Date.now() - startTime;
+
+
+                if (
+                    elapsed <
+                    minimumDisplayTime
+                ) {
+
+                    window.setTimeout(
+                        checkApplication,
+                        100
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    hasTravelDataRendered()
+                ) {
+
+                    updateStatus(
+                        "TRAVEL RECORDS LOADED"
+                    );
+
+
+                    /*
+                     * Let the table paint completely
+                     * before fading the loading screen.
+                     */
+
+                    window.setTimeout(
+                        hideLoader,
+                        300
+                    );
+
+                    return;
+                }
+
+
+                if (
+                    applicationExists()
+                ) {
+
+                    if (
+                        elapsed < 2500
+                    ) {
+
+                        updateStatus(
+                            "OPENING TRAVEL MANAGEMENT"
+                        );
+
+                    } else if (
+                        elapsed < 7000
+                    ) {
+
+                        updateStatus(
+                            "LOADING TRAVEL RECORDS"
+                        );
+
+                    } else if (
+                        elapsed < 12000
+                    ) {
+
+                        updateStatus(
+                            "ALMOST READY"
+                        );
+
+                    } else {
+
+                        updateStatus(
+                            "FINISHING UP"
+                        );
+                    }
+
+                } else {
+
+                    updateStatus(
+                        "STARTING TRAVEL MANAGEMENT"
+                    );
+                }
+
+
+                /*
+                 * Keep checking until the actual
+                 * records appear.
+                 */
+
+                if (
+                    elapsed <
+                    maximumWaitTime
+                ) {
+
+                    window.setTimeout(
+                        checkApplication,
+                        150
+                    );
+
+                } else {
+
+                    /*
+                     * Absolute fallback so the user
+                     * is never trapped by the loader.
+                     */
+
+                    hideLoader();
+                }
+            }
+
+
+            /*
+             * Start after the browser has loaded.
+             */
+
+            window.addEventListener(
+                "load",
+                function () {
+
+                    window.setTimeout(
+                        checkApplication,
+                        150
+                    );
+
+                }
+            );
+
+
+            /*
+             * MutationObserver makes the loader react
+             * quickly when Fiori Elements inserts the
+             * table rows after the OData request.
+             */
+
+            if (
+                window.MutationObserver
+            ) {
+
+                var observer =
+                    new MutationObserver(
+                        function () {
+
+                            if (
+                                hasTravelDataRendered()
+                            ) {
+
+                                updateStatus(
+                                    "TRAVEL RECORDS LOADED"
+                                );
+
+
+                                window.setTimeout(
+                                    hideLoader,
+                                    300
+                                );
+
+
+                                observer.disconnect();
+                            }
+
+                        }
+                    );
+
+
+                window.setTimeout(
+                    function () {
+
+                        var container =
+                            document.getElementById(
+                                "container"
+                            );
+
+
+                        if (container) {
+
+                            observer.observe(
+                                container,
+                                {
+                                    childList: true,
+                                    subtree: true
+                                }
+                            );
+                        }
+
+                    },
+                    100
+                );
+            }
+
+
+            /*
+             * Absolute safety fallback.
+             */
+
+            window.setTimeout(
+                function () {
+
+                    hideLoader();
+
+                },
+                maximumWaitTime + 1000
+            );
+
+
+        }());
+
+    </script>
+
+</body>
+
+</html>
